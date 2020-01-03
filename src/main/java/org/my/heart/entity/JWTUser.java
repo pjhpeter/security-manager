@@ -10,7 +10,11 @@ public class JWTUser implements UserDetails {
 
 	private static final long serialVersionUID = -8259845930972485319L;
 
+	private Long id;
+
 	private String username;
+
+	private String name;
 
 	private String password;
 
@@ -26,8 +30,26 @@ public class JWTUser implements UserDetails {
 		return new JWTUser();
 	}
 
+	public Long getId() {
+		return id;
+	}
+
+	public JWTUser setId(Long id) {
+		this.id = id;
+		return this;
+	}
+
 	public JWTUser setUsername(String username) {
 		this.username = username;
+		return this;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public JWTUser setName(String name) {
+		this.name = name;
 		return this;
 	}
 

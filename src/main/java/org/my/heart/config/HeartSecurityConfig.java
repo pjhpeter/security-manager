@@ -1,5 +1,6 @@
 package org.my.heart.config;
 
+import org.my.heart.authentication.JWTAutenticationFilter;
 import org.my.heart.authentication.RequestBodyUsernamePasswordAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -36,16 +37,16 @@ public class HeartSecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	@Bean
-	public UsernamePasswordAuthenticationFilter jwtUsernamePasswordAuthenticationFilter() throws Exception {
-		RequestBodyUsernamePasswordAuthenticationFilter jwtUsernamePasswordAuthenticationFilter = new RequestBodyUsernamePasswordAuthenticationFilter();
+	public UsernamePasswordAuthenticationFilter requestBodyUsernamePasswordAuthenticationFilter() throws Exception {
+		RequestBodyUsernamePasswordAuthenticationFilter requestBodyUsernamePasswordAuthenticationFilter = new RequestBodyUsernamePasswordAuthenticationFilter();
 		// 不指定拦截路径就算替换了UsernamePasswordAuthenticaitonFilter都不会进来
-		jwtUsernamePasswordAuthenticationFilter.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/user/login", HttpMethod.POST.name()));
+		requestBodyUsernamePasswordAuthenticationFilter.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/user/login", HttpMethod.POST.name()));
 		// 自定义UsernamePasswordAuthenticationFilter就会导致原来configure中的.successHandler和.failureHandler失效
-		jwtUsernamePasswordAuthenticationFilter.setAuthenticationSuccessHandler(jwtAuthenticationSuccessHandler);
-		jwtUsernamePasswordAuthenticationFilter.setAuthenticationFailureHandler(jwtAuthentiacionFailureHandler);
+		requestBodyUsernamePasswordAuthenticationFilter.setAuthenticationSuccessHandler(jwtAuthenticationSuccessHandler);
+		requestBodyUsernamePasswordAuthenticationFilter.setAuthenticationFailureHandler(jwtAuthentiacionFailureHandler);
 		// 自定义filter必须指定AuthenticationManager
-		jwtUsernamePasswordAuthenticationFilter.setAuthenticationManager(authenticationManager());
-		return jwtUsernamePasswordAuthenticationFilter;
+		requestBodyUsernamePasswordAuthenticationFilter.setAuthenticationManager(authenticationManager());
+		return requestBodyUsernamePasswordAuthenticationFilter;
 	}
 
 	@Override
@@ -57,8 +58,9 @@ public class HeartSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.formLogin()
 				.and()
-				.addFilterAt(jwtUsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+				.addFilterAt(requestBodyUsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
 				.sessionManagement().disable()
-				.csrf().ignoringRequestMatchers(new AntPathRequestMatcher("/user/login", HttpMethod.POST.name()));
+				.csrf().disable()
+				.addFilterAfter(new JWTAutenticationFilter(), RequestBodyUsernamePasswordAuthenticationFilter.class);
 	}
 }

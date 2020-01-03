@@ -18,8 +18,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-@Service("jwtUserDetailService")
-public class JWTUserDetailService implements UserDetailsService {
+@Service("jwtUserDetailsService")
+public class JWTUserDetailsService implements UserDetailsService {
 
 	@Autowired
 	private UserRepository userRepository;
@@ -38,7 +38,9 @@ public class JWTUserDetailService implements UserDetailsService {
 		});
 		User user = userOptional.get();
 		return JWTUser.build()
+				.setId(user.getId())
 				.setUsername(username)
+				.setName(user.getName())
 				.setPassword(user.getPassword())
 				.setAuthorities(AuthorityUtils.commaSeparatedStringToAuthorityList("ADMIN"))
 				.setNonLock(user.getNonLock())

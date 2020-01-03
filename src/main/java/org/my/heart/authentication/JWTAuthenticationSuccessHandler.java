@@ -6,15 +6,15 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.my.heart.constants.ContentType;
+import org.my.heart.entity.JWTUser;
 import org.my.heart.entity.Result;
+import org.my.heart.utils.JWTUtils;
+import org.my.heart.utils.ResponseUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-
-import com.alibaba.fastjson.JSONObject;
 
 @Component("jwtAuthenticationSuccessHandler")
 public class JWTAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
@@ -23,10 +23,9 @@ public class JWTAuthenticationSuccessHandler implements AuthenticationSuccessHan
 
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-		response.setContentType(ContentType.APPLICATION_JSON_UTF8);
-		JSONObject data = new JSONObject();
-		data.put("token", "alsdjflwjelrlkweflkdlkfjlkjfaslkdals;jfalsjd");
-		response.getWriter().write(Result.ok("登录成功", data).toJSONString());
+		JWTUser jwtUser = (JWTUser) authentication.getPrincipal();
+		response.setHeader(JWTUtils.TOKEN_HEADER_NAME, JWTUtils.buildToken(jwtUser));
+		ResponseUtils.buildResponseBody(response, Result.ok("登录成功"));
 		log.debug("登录成功");
 	}
 

@@ -9,3 +9,5 @@ spring:
     show-sql: true
     # 加上这一项，自动创建的表才能做事务处理
     database-platform: org.hibernate.dialect.MySQL57Dialect
+    
+#logging:#  level:#    root: debug
