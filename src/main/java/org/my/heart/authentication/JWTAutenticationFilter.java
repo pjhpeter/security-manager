@@ -12,6 +12,7 @@ import org.my.heart.entity.Result;
 import org.my.heart.utils.JWTUtils;
 import org.my.heart.utils.ResponseUtils;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import io.jsonwebtoken.ExpiredJwtException;
@@ -35,10 +36,14 @@ public class JWTAutenticationFilter extends OncePerRequestFilter {
 		}
 		try {
 			JWTUtils.parseToken(token);
+			JWTAuthenticationToken authentication = new JWTAuthenticationToken(token);
+			SecurityContextHolder.getContext().setAuthentication(authentication);
 		} catch (ExpiredJwtException e) {
+			// token过期
 			ResponseUtils.buildResponseBody(response, Result.failure(HttpStatus.UNAUTHORIZED.value(), "令牌过期，请重新登录"));
 			return;
 		} catch (SignatureException e) {
+			// token被篡改
 			ResponseUtils.buildResponseBody(response, Result.failure(HttpStatus.UNAUTHORIZED.value(), "令牌错误，请重新登录"));
 			return;
 		}
