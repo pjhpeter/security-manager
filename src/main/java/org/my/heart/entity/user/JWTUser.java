@@ -6,6 +6,12 @@ import java.util.List;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+/**
+ * JWT用户信息实体
+ * 
+ * @author 彭嘉辉
+ *
+ */
 public class JWTUser implements UserDetails {
 
 	private static final long serialVersionUID = -8259845930972485319L;

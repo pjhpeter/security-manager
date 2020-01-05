@@ -27,6 +27,7 @@ public class RoleMenu implements Serializable {
 	@Column(name = "menu_id")
 	private Long menuId;
 
+	// 因为需要自定义多一个字段，所以要创建一个关联表的映射实体
 	@Column
 	private Boolean editable;
 	

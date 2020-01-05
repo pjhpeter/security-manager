@@ -2,7 +2,6 @@ package org.my.heart.controller;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -56,9 +55,9 @@ public class TestController {
 
 				@Override
 				public Predicate toPredicate(Root<MenuView> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-					Set<String> roleIdSet = AuthorityUtils.authorityListToSet(authorities);
-					System.out.println(roleIdSet);
+					// 根据parentId来查询子菜单，第一级菜单的parentId = 0
 					Predicate equal = criteriaBuilder.equal(root.get("parentId"), parentId);
+					// 查询当前用户角色可以访问的菜单
 					Predicate in = root.get("roleId").in(AuthorityUtils.authorityListToSet(authorities));
 					return criteriaBuilder.and(equal, in);
 				}

@@ -14,6 +14,12 @@ import javax.persistence.Table;
 
 import org.my.heart.entity.role.Role;
 
+/**
+ * t_user用户表映射实体
+ * 
+ * @author pjhpe
+ *
+ */
 @Entity
 @Table(name = "t_user")
 public class User implements Serializable {

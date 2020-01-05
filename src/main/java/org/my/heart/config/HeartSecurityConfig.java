@@ -31,11 +31,13 @@ public class HeartSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private AuthenticationFailureHandler jwtAuthentiacionFailureHandler;
 
+	// 全局加密算法
 	@Bean
 	public PasswordEncoder getPasswordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
 
+	// 登录验证过滤器
 	@Bean
 	public UsernamePasswordAuthenticationFilter requestBodyUsernamePasswordAuthenticationFilter() throws Exception {
 		RequestBodyUsernamePasswordAuthenticationFilter requestBodyUsernamePasswordAuthenticationFilter = new RequestBodyUsernamePasswordAuthenticationFilter();
@@ -58,9 +60,11 @@ public class HeartSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.formLogin()
 				.and()
+				// 替换默认的用户名密码验证过滤器
 				.addFilterAt(requestBodyUsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
 				.sessionManagement().disable()
 				.csrf().disable()
+				// 添加token验证过滤器
 				.addFilterAfter(new JWTAutenticationFilter(), RequestBodyUsernamePasswordAuthenticationFilter.class);
 	}
 }

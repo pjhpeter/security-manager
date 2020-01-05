@@ -14,6 +14,12 @@ import javax.persistence.Table;
 import org.my.heart.entity.menu.Menu;
 import org.my.heart.entity.user.User;
 
+/**
+ * t_role角色表映射实体
+ * 
+ * @author 彭嘉辉
+ *
+ */
 @Entity
 @Table(name = "t_role")
 public class Role {
