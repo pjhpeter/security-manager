@@ -44,19 +44,23 @@ public class JWTUtils {
 	/**
 	 * 生成token
 	 * 
-	 * @param user 用户信息
+	 * @param user       用户信息
 	 * @return token
 	 */
 	public static String buildToken(JWTUser user) {
 		log.debug(user.toString());
 		JwtBuilder builder = Jwts.builder().setId(CommonUtils.generateId().toString()).setIssuer(TOKEN_ISSUSER).setAudience(user.getId().toString()).setSubject(user.getUsername()).setIssuedAt(new Date()).setExpiration(new Date(System.currentTimeMillis() + TOKEN_VALIDITY_PERIOD)).signWith(SignatureAlgorithm.HS256, SIGN_KEY);
+		Map<String, Object> claims = new HashMap<>();
+
+		// 添加mac地址绑定，防止token被截获后恶意攻击
+		claims.put("mac", user.getMacAddress());
 
 		// 处理权限
 		Collection<? extends GrantedAuthority> authorities = user.getAuthorities();
-		if(authorities.size() > 0) {
+		if (authorities.size() > 0) {
 			Set<String> authoritiesSet = AuthorityUtils.authorityListToSet(authorities);
-			Map<String, Object> claims = new HashMap<>();
 			claims.put("roles", StringUtils.join(authoritiesSet, ","));
+
 			builder.addClaims(claims);
 		}
 		return builder.compact();
@@ -72,7 +76,7 @@ public class JWTUtils {
 		token = token.trim().replaceAll(TOKEN_PREFIX, "");
 		Claims claims = Jwts.parser().setSigningKey(SIGN_KEY).parseClaimsJws(token).getBody();
 		log.debug("解析token：" + claims.getSubject());
-		JWTUser jwtUser = JWTUser.build().setId(Long.parseLong(claims.getAudience())).setName(claims.getSubject());
+		JWTUser jwtUser = JWTUser.build().setId(Long.parseLong(claims.getAudience())).setName(claims.getSubject()).setMacAddress(claims.get("mac").toString());
 		if (claims.get("roles") != null) {
 			jwtUser.setAuthorities(AuthorityUtils.commaSeparatedStringToAuthorityList(claims.get("roles").toString()));
 		}

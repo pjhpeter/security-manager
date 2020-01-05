@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.my.heart.entity.Result;
 import org.my.heart.entity.user.JWTUser;
+import org.my.heart.utils.IpUtils;
 import org.my.heart.utils.JWTUtils;
 import org.my.heart.utils.ResponseUtils;
 import org.slf4j.Logger;
@@ -24,7 +25,9 @@ public class JWTAuthenticationSuccessHandler implements AuthenticationSuccessHan
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 		JWTUser jwtUser = (JWTUser) authentication.getPrincipal();
-		response.setHeader(JWTUtils.TOKEN_HEADER_NAME, JWTUtils.buildToken(jwtUser));
+		String ipAddress = IpUtils.getIpAddress(request);
+		String macAddress = IpUtils.getMacAddress(ipAddress);
+		response.setHeader(JWTUtils.TOKEN_HEADER_NAME, JWTUtils.buildToken(jwtUser.setMacAddress(macAddress)));
 		ResponseUtils.buildResponseBody(response, Result.ok("登录成功"));
 		log.debug("登录成功");
 	}

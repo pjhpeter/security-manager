@@ -25,12 +25,14 @@ public class JWTUser implements UserDetails {
 	private String password;
 
 	private List<GrantedAuthority> authorities;
-
+	
 	private Boolean nonLock;
 
 	private Boolean gredentialsNonExpired;
 
 	private Boolean enabled;
+	
+	private String macAddress;
 
 	public static JWTUser build() {
 		return new JWTUser();
@@ -117,6 +119,15 @@ public class JWTUser implements UserDetails {
 	@Override
 	public boolean isEnabled() {
 		return this.enabled;
+	}
+
+	public String getMacAddress() {
+		return macAddress;
+	}
+
+	public JWTUser setMacAddress(String macAddress) {
+		this.macAddress = macAddress;
+		return this;
 	}
 
 }

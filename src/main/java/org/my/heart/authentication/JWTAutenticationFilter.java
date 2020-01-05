@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.my.heart.entity.Result;
+import org.my.heart.entity.user.JWTUser;
+import org.my.heart.utils.IpUtils;
 import org.my.heart.utils.JWTUtils;
 import org.my.heart.utils.ResponseUtils;
 import org.springframework.http.HttpStatus;
@@ -35,9 +37,15 @@ public class JWTAutenticationFilter extends OncePerRequestFilter {
 			return;
 		}
 		try {
-			JWTUtils.parseToken(token);
-			JWTAuthenticationToken authentication = new JWTAuthenticationToken(token);
-			SecurityContextHolder.getContext().setAuthentication(authentication);
+			JWTUser jwtUser = JWTUtils.parseToken(token);
+			// 判断请求方的mac地址是否也token里的一致，截获token发起的攻击
+			if(jwtUser.getMacAddress().equals(IpUtils.getMacAddress(IpUtils.getIpAddress(request)))) {
+				JWTAuthenticationToken authentication = new JWTAuthenticationToken(token);
+				SecurityContextHolder.getContext().setAuthentication(authentication);
+			}else {
+				ResponseUtils.buildResponseBody(response, Result.failure(HttpStatus.UNAUTHORIZED.value(), "这样做是犯法的哦^_^"));
+				return;
+			}
 		} catch (ExpiredJwtException e) {
 			// token过期
 			ResponseUtils.buildResponseBody(response, Result.failure(HttpStatus.UNAUTHORIZED.value(), "令牌过期，请重新登录"));
