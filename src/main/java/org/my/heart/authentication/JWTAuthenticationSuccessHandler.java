@@ -6,8 +6,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.my.heart.entity.JWTUser;
 import org.my.heart.entity.Result;
+import org.my.heart.entity.user.JWTUser;
 import org.my.heart.utils.JWTUtils;
 import org.my.heart.utils.ResponseUtils;
 import org.slf4j.Logger;

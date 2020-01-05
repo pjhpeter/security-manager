@@ -1,4 +1,4 @@
-package org.my.heart.entity;
+package org.my.heart.entity.menu;
 
 import java.io.Serializable;
 
@@ -7,23 +7,17 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-/**
- * 功能菜单
- * 
- * @author 彭嘉辉
- *
- */
 @Entity
-@Table(name = "t_menu")
-public class Menu implements Serializable {
+@Table(name = "v_menu_view")
+public class MenuView implements Serializable {
 
-	private static final long serialVersionUID = -1501634849327254247L;
+	private static final long serialVersionUID = -4211068137377435000L;
 
 	@Id
 	@Column
 	private Long id;
 
-	@Column(name ="menu_name", length = 64)
+	@Column(name = "menu_name", length = 64)
 	private String menuName;
 
 	@Column(name = "menu_uri", length = 64)
@@ -34,6 +28,12 @@ public class Menu implements Serializable {
 
 	@Column(name = "parent_id")
 	private Long parentId;
+
+	@Column(name = "role_id")
+	private Long roleId;
+
+	@Column
+	private Boolean editable;
 
 	public Long getId() {
 		return id;
@@ -73,6 +73,22 @@ public class Menu implements Serializable {
 
 	public void setParentId(Long parentId) {
 		this.parentId = parentId;
+	}
+
+	public Long getRoleId() {
+		return roleId;
+	}
+
+	public void setRoleId(Long roleId) {
+		this.roleId = roleId;
+	}
+
+	public Boolean getEditable() {
+		return editable;
+	}
+
+	public void setEditable(Boolean editable) {
+		this.editable = editable;
 	}
 
 }

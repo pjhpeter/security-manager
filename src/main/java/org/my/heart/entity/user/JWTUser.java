@@ -1,4 +1,4 @@
-package org.my.heart.entity;
+package org.my.heart.entity.user;
 
 import java.util.Collection;
 import java.util.List;

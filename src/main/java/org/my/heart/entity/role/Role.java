@@ -1,4 +1,4 @@
-package org.my.heart.entity;
+package org.my.heart.entity.role;
 
 import java.util.List;
 
@@ -10,6 +10,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+
+import org.my.heart.entity.menu.Menu;
+import org.my.heart.entity.user.User;
 
 @Entity
 @Table(name = "t_role")
@@ -44,6 +47,22 @@ public class Role {
 
 	public void setRoleName(String roleName) {
 		this.roleName = roleName;
+	}
+
+	public List<User> getUsers() {
+		return users;
+	}
+
+	public void setUsers(List<User> users) {
+		this.users = users;
+	}
+
+	public List<Menu> getMenus() {
+		return menus;
+	}
+
+	public void setMenus(List<Menu> menus) {
+		this.menus = menus;
 	}
 
 }

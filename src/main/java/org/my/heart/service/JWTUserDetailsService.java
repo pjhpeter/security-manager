@@ -10,9 +10,9 @@ import javax.persistence.criteria.Root;
 
 import org.apache.commons.lang3.StringUtils;
 import org.my.heart.dao.UserRepository;
-import org.my.heart.entity.JWTUser;
-import org.my.heart.entity.Role;
-import org.my.heart.entity.User;
+import org.my.heart.entity.role.Role;
+import org.my.heart.entity.user.JWTUser;
+import org.my.heart.entity.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.authority.AuthorityUtils;

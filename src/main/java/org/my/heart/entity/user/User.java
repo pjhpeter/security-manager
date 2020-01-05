@@ -1,4 +1,4 @@
-package org.my.heart.entity;
+package org.my.heart.entity.user;
 
 import java.io.Serializable;
 import java.util.List;
@@ -11,6 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+
+import org.my.heart.entity.role.Role;
 
 @Entity
 @Table(name = "t_user")

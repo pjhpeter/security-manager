@@ -2,14 +2,18 @@ package org.my.heart.utils;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
-import org.my.heart.entity.JWTUser;
+import org.my.heart.entity.user.JWTUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -45,16 +49,16 @@ public class JWTUtils {
 	 */
 	public static String buildToken(JWTUser user) {
 		log.debug(user.toString());
+		JwtBuilder builder = Jwts.builder().setId(CommonUtils.generateId().toString()).setIssuer(TOKEN_ISSUSER).setAudience(user.getId().toString()).setSubject(user.getUsername()).setIssuedAt(new Date()).setExpiration(new Date(System.currentTimeMillis() + TOKEN_VALIDITY_PERIOD)).signWith(SignatureAlgorithm.HS256, SIGN_KEY);
+
+		// 处理权限
 		Collection<? extends GrantedAuthority> authorities = user.getAuthorities();
-		System.out.println(authorities);
-		JwtBuilder builder = Jwts.builder()
-									.setId(CommonUtils.generateId().toString())
-									.setIssuer(TOKEN_ISSUSER)
-									.setAudience(user.getId().toString())
-									.setSubject(user.getUsername())
-									.setIssuedAt(new Date())
-									.setExpiration(new Date(System.currentTimeMillis() + TOKEN_VALIDITY_PERIOD))
-									.signWith(SignatureAlgorithm.HS256, SIGN_KEY);
+		if(authorities.size() > 0) {
+			Set<String> authoritiesSet = AuthorityUtils.authorityListToSet(authorities);
+			Map<String, Object> claims = new HashMap<>();
+			claims.put("roles", StringUtils.join(authoritiesSet, ","));
+			builder.addClaims(claims);
+		}
 		return builder.compact();
 	}
 
@@ -68,9 +72,12 @@ public class JWTUtils {
 		token = token.trim().replaceAll(TOKEN_PREFIX, "");
 		Claims claims = Jwts.parser().setSigningKey(SIGN_KEY).parseClaimsJws(token).getBody();
 		log.debug("解析token：" + claims.getSubject());
-		return JWTUser.build()
-						.setId(Long.parseLong(claims.getAudience()))
-						.setName(claims.getSubject());
+		JWTUser jwtUser = JWTUser.build().setId(Long.parseLong(claims.getAudience())).setName(claims.getSubject());
+		if (claims.get("roles") != null) {
+			jwtUser.setAuthorities(AuthorityUtils.commaSeparatedStringToAuthorityList(claims.get("roles").toString()));
+		}
+		return jwtUser;
+
 	}
 
 	/**
@@ -86,5 +93,5 @@ public class JWTUtils {
 		}
 		return token;
 	}
-	
+
 }

@@ -1,4 +1,4 @@
-package org.my.heart.entity;
+package org.my.heart.entity.user;
 
 import java.io.Serializable;
 import java.util.List;
@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+
+import org.my.heart.entity.menu.Menu;
 
 /**
  * 权限

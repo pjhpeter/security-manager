@@ -6,8 +6,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.my.heart.constants.ContentType;
-import org.my.heart.entity.LoginUser;
 import org.my.heart.entity.Result;
+import org.my.heart.entity.user.LoginUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

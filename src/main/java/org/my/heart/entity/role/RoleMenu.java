@@ -1,4 +1,4 @@
-package org.my.heart.entity;
+package org.my.heart.entity.role;
 
 import java.io.Serializable;
 
@@ -13,8 +13,8 @@ import javax.persistence.Table;
  * @author 彭嘉辉
  *
  */
-//@Entity
-//@Table(name = "t_role_menu")
+@Entity
+@Table(name = "t_role_menu")
 public class RoleMenu implements Serializable {
 
 	private static final long serialVersionUID = 13158324154798260L;
@@ -27,6 +27,9 @@ public class RoleMenu implements Serializable {
 	@Column(name = "menu_id")
 	private Long menuId;
 
+	@Column
+	private Boolean editable;
+	
 	public Long getRoleId() {
 		return roleId;
 	}
@@ -43,4 +46,12 @@ public class RoleMenu implements Serializable {
 		this.menuId = menuId;
 	}
 
+	public Boolean getEditable() {
+		return editable;
+	}
+
+	public void setEditable(Boolean editable) {
+		this.editable = editable;
+	}
+	
 }
