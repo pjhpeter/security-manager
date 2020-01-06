@@ -7,10 +7,12 @@ public class JWTAuthenticationToken extends AbstractAuthenticationToken {
 	private static final long serialVersionUID = 2937509166356305278L;
 	
 	private String token;
+	private String ipAddress;
 
-	public JWTAuthenticationToken(String token) {
+	public JWTAuthenticationToken(String token, String ipAddress) {
 		super(null);
 		this.token = token;
+		this.ipAddress = ipAddress;
 		setAuthenticated(false);
 	}
 
@@ -27,6 +29,11 @@ public class JWTAuthenticationToken extends AbstractAuthenticationToken {
 
 	public String getToken() {
 		return token;
+	}
+
+
+	public String getIpAddress() {
+		return ipAddress;
 	}
 	
 }

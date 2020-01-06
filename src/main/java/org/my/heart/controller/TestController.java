@@ -16,7 +16,7 @@ import org.my.heart.entity.menu.MenuView;
 import org.my.heart.entity.user.JWTUser;
 import org.my.heart.entity.user.User;
 import org.my.heart.entity.user.UserInfo;
-import org.my.heart.utils.JWTUtils;
+import org.my.heart.service.JWTTokenHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.jpa.domain.Specification;
@@ -34,10 +34,13 @@ public class TestController {
 
 	@Autowired
 	private MenuViewRepository menuViewRepository;
+	
+	@Autowired
+	private JWTTokenHandler jwtTokenHandler;
 
 	@GetMapping("/user/info")
 	public Result getUserInfo(HttpServletRequest request) {
-		JWTUser jwtUser = JWTUtils.parseToken(JWTUtils.getToken(request));
+		JWTUser jwtUser = jwtTokenHandler.parseToken(jwtTokenHandler.getToken(request));
 		User user = userRepository.getOne(jwtUser.getId());
 		UserInfo userInfo = new UserInfo();
 		BeanCopier.create(User.class, UserInfo.class, false).copy(user, userInfo, null);
@@ -46,7 +49,7 @@ public class TestController {
 
 	@GetMapping("/role/menu/{parentId}")
 	public Result getMenu(HttpServletRequest request, @PathVariable("parentId") Long parentId) {
-		JWTUser jwtUser = JWTUtils.parseToken(JWTUtils.getToken(request));
+		JWTUser jwtUser = jwtTokenHandler.parseToken(jwtTokenHandler.getToken(request));
 		Collection<? extends GrantedAuthority> authorities = jwtUser.getAuthorities();
 		if (authorities != null && authorities.size() > 0) {
 			List<MenuView> menuViews = menuViewRepository.findAll(new Specification<MenuView>() {

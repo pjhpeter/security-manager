@@ -1,6 +1,5 @@
 package org.my.heart.config;
 
-import org.my.heart.authentication.JWTAutenticationFilter;
 import org.my.heart.authentication.RequestBodyUsernamePasswordAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +16,7 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -30,7 +30,10 @@ public class HeartSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private AuthenticationFailureHandler jwtAuthentiacionFailureHandler;
-
+	
+	@Autowired
+	private OncePerRequestFilter jwtAuthenticationFilter;
+	
 	// 全局加密算法
 	@Bean
 	public PasswordEncoder getPasswordEncoder() {
@@ -40,15 +43,15 @@ public class HeartSecurityConfig extends WebSecurityConfigurerAdapter {
 	// 登录验证过滤器
 	@Bean
 	public UsernamePasswordAuthenticationFilter requestBodyUsernamePasswordAuthenticationFilter() throws Exception {
-		RequestBodyUsernamePasswordAuthenticationFilter requestBodyUsernamePasswordAuthenticationFilter = new RequestBodyUsernamePasswordAuthenticationFilter();
+		RequestBodyUsernamePasswordAuthenticationFilter filter = new RequestBodyUsernamePasswordAuthenticationFilter();
 		// 不指定拦截路径就算替换了UsernamePasswordAuthenticaitonFilter都不会进来
-		requestBodyUsernamePasswordAuthenticationFilter.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/user/login", HttpMethod.POST.name()));
+		filter.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/user/login", HttpMethod.POST.name()));
 		// 自定义UsernamePasswordAuthenticationFilter就会导致原来configure中的.successHandler和.failureHandler失效
-		requestBodyUsernamePasswordAuthenticationFilter.setAuthenticationSuccessHandler(jwtAuthenticationSuccessHandler);
-		requestBodyUsernamePasswordAuthenticationFilter.setAuthenticationFailureHandler(jwtAuthentiacionFailureHandler);
+		filter.setAuthenticationSuccessHandler(jwtAuthenticationSuccessHandler);
+		filter.setAuthenticationFailureHandler(jwtAuthentiacionFailureHandler);
 		// 自定义filter必须指定AuthenticationManager
-		requestBodyUsernamePasswordAuthenticationFilter.setAuthenticationManager(authenticationManager());
-		return requestBodyUsernamePasswordAuthenticationFilter;
+		filter.setAuthenticationManager(authenticationManager());
+		return filter;
 	}
 
 	@Override
@@ -64,7 +67,7 @@ public class HeartSecurityConfig extends WebSecurityConfigurerAdapter {
 				.addFilterAt(requestBodyUsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
 				.sessionManagement().disable()
 				.csrf().disable()
-				// 添加token验证过滤器
-				.addFilterAfter(new JWTAutenticationFilter(), RequestBodyUsernamePasswordAuthenticationFilter.class);
+				// 添加权限验证过滤器
+				.addFilterAfter(jwtAuthenticationFilter, RequestBodyUsernamePasswordAuthenticationFilter.class);
 	}
 }
