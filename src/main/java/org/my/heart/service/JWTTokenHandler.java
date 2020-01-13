@@ -14,7 +14,6 @@ import org.my.heart.utils.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.GrantedAuthority;
@@ -45,6 +44,7 @@ public class JWTTokenHandler {
 
 	private static final String SIGN_KEY = "by_heart";
 
+	private static final String OLD_TOKEN_NAME = "oldToken";
 	// token有效期30分钟
 	private static final long TOKEN_VALIDITY_PERIOD = 1000 * 60 * 30;
 
@@ -121,52 +121,22 @@ public class JWTTokenHandler {
 	 * @param token
 	 * @return 老token
 	 */
-	@Cacheable(key = "#token")
-	public String getOldTokenFromCache(String token) {
+	@Cacheable(cacheNames = OLD_TOKEN_NAME, key = "#token")
+	public String getTokenFromOldCache(String token) {
 		log.trace("缓存中没有老token");
 		return "";
 	}
 
-	@CacheEvict(key = "#token", beforeInvocation = true)
-	public void removeOldTokenCache(String token) {
-		System.out.println("删除老token");
-		log.trace("没有删除老token缓存");
-	}
-	
 	/**
 	 * 以老token为key，做缓存，10秒过期，防止同时前端同时发送多个异步请求时，出现token已经过去无法通过验证的问题
 	 * 
-	 * @param token
+	 * @param oldToken
+	 * @param newToken
 	 */
-	@CachePut(key = "#token")
-	public String cacheOldToken(String token) {
+	@CachePut(cacheNames = OLD_TOKEN_NAME, key = "#oldToken")
+	public String cacheOldToken(String oldToken, String newToken) {
 		log.debug("缓存老token");
-		new Thread(this.new removeOldTokenCacheExecutor(token, this)).start();
-		return token;
-	}
-
-	public class removeOldTokenCacheExecutor implements Runnable {
-
-		private String oldToken;
-		
-		private JWTTokenHandler jwtTokenHandler;
-
-		public removeOldTokenCacheExecutor(String oldToken, JWTTokenHandler jwtUtils) {
-			this.oldToken = oldToken;
-			this.jwtTokenHandler = jwtUtils;
-		}
-
-		@Override
-		public void run() {
-			try {
-				// 等待10秒
-				Thread.sleep((10 * 1000));
-				this.jwtTokenHandler.removeOldTokenCache(this.oldToken);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-
+		return newToken;
 	}
 
 }
