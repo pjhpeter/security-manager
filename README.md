@@ -2,7 +2,7 @@
 
 ## 项目介绍
 
-这是一个基于Spring Security + JWT的前后端分离权限管理小例子，用到的框架和数据库如下：
+这是一个基于Spring Security + JWT的前后端分离权限管理小例子，方便入门Spring Security的朋友学习，用到的框架和数据库如下：
 + Spring Boot 2.2.2
 + Spring Security
 + Spring Data JPA
