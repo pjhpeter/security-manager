@@ -26,6 +26,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * 测试请求入口
+ * 
+ * @author 彭嘉辉
+ *
+ */
 @RestController
 public class TestController {
 
@@ -34,10 +40,16 @@ public class TestController {
 
 	@Autowired
 	private MenuViewRepository menuViewRepository;
-	
+
 	@Autowired
 	private JWTTokenHandler jwtTokenHandler;
 
+	/**
+	 * 获取用户信息
+	 * 
+	 * @param request
+	 * @return
+	 */
 	@GetMapping("/user/info")
 	public Result getUserInfo(HttpServletRequest request) {
 		JWTUser jwtUser = jwtTokenHandler.parseToken(jwtTokenHandler.getToken(request));
@@ -47,6 +59,13 @@ public class TestController {
 		return Result.ok("获取成功", userInfo);
 	}
 
+	/**
+	 * 获取当前用户角色允许访问的菜单，逐层异步加载
+	 * 
+	 * @param request
+	 * @param parentId
+	 * @return
+	 */
 	@GetMapping("/role/menu/{parentId}")
 	public Result getMenu(HttpServletRequest request, @PathVariable("parentId") Long parentId) {
 		JWTUser jwtUser = jwtTokenHandler.parseToken(jwtTokenHandler.getToken(request));
