@@ -27,7 +27,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 /**
- * JWT工具类
+ * JWT处理类
  * 
  * @author 彭嘉辉
  *

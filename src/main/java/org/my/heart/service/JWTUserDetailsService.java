@@ -31,6 +31,7 @@ public class JWTUserDetailsService implements UserDetailsService {
 	@Override
 	@Transactional(readOnly = true)
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		// 通过username查询对应的用户信息，下面是JPA的条件查询写法
 		Optional<User> userOptional = userRepository.findOne(new Specification<User>() {
 
 			private static final long serialVersionUID = 1L;
@@ -42,14 +43,24 @@ public class JWTUserDetailsService implements UserDetailsService {
 			}
 		});
 		User user = userOptional.get();
-		JWTUser jwtUser = JWTUser.build().setId(user.getId()).setUsername(username).setName(user.getName()).setPassword(user.getPassword()).setNonLock(user.getNonLock()).setGredentialsNonExpired(user.getGredentialsNonExpired()).setEnabled(user.getEnabled());
+		
+		// 生成用户信息，提供给Spring Security进行校验
+		JWTUser jwtUser = JWTUser.build()
+									.setId(user.getId())
+									.setUsername(username)
+									.setName(user.getName())
+									.setPassword(user.getPassword())
+									.setNonLock(user.getNonLock())
+									.setGredentialsNonExpired(user.getGredentialsNonExpired())
+									.setEnabled(user.getEnabled());
+		// 读取角色数据
 		List<Role> roles = user.getRoles();
 		if (roles != null && roles.size() > 0) {
-			String[] pmArr = new String[roles.size()];
+			String[] roleIdArr = new String[roles.size()];
 			for (int i = 0; i < roles.size(); i++) {
-				pmArr[i] = roles.get(i).getId().toString();
+				roleIdArr[i] = roles.get(i).getId().toString();
 			}
-			jwtUser.setAuthorities(AuthorityUtils.commaSeparatedStringToAuthorityList(StringUtils.join(pmArr, ",")));
+			jwtUser.setAuthorities(AuthorityUtils.commaSeparatedStringToAuthorityList(StringUtils.join(roleIdArr, ",")));
 		}
 		return jwtUser;
 	}

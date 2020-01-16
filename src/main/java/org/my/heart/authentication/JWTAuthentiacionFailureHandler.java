@@ -15,6 +15,12 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
 
+/**
+ * 登录失败处理
+ * 
+ * @author 彭嘉辉
+ *
+ */
 @Component("jwtAuthentiacionFailureHandler")
 public class JWTAuthentiacionFailureHandler implements AuthenticationFailureHandler {
 

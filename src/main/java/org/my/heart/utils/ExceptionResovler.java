@@ -1,4 +1,4 @@
-package org.my.heart.authentication;
+package org.my.heart.utils;
 
 import java.io.IOException;
 

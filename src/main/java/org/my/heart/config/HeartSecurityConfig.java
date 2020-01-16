@@ -30,10 +30,10 @@ public class HeartSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private AuthenticationFailureHandler jwtAuthentiacionFailureHandler;
-	
+
 	@Autowired
 	private OncePerRequestFilter jwtAuthenticationFilter;
-	
+
 	// 全局加密算法
 	@Bean
 	public PasswordEncoder getPasswordEncoder() {
@@ -54,18 +54,27 @@ public class HeartSecurityConfig extends WebSecurityConfigurerAdapter {
 		return filter;
 	}
 
+	/**
+	 * 配置AuthenticationManager，全局认证管理对象
+	 */
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		// 配置从数据库读取用户信息的自定义实现
 		auth.userDetailsService(jwtUserDetailService);
 	}
 
+	/**
+	 * 配置请求过滤规则
+	 */
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.formLogin()
-				.and()
-				// 替换默认的用户名密码验证过滤器
+		// 表单登录
+		http.formLogin().and()
+				// 替换默认的用户名密码验证过滤器UsernamePasswordAuthenticationFilter
 				.addFilterAt(requestBodyUsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+				// JWT验证不需要session
 				.sessionManagement().disable()
+				// 没有session机制则不需要csrf防护
 				.csrf().disable()
 				// 添加权限验证过滤器
 				.addFilterAfter(jwtAuthenticationFilter, RequestBodyUsernamePasswordAuthenticationFilter.class);
