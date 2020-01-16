@@ -120,7 +120,7 @@ CREATE TABLE `t_user` (
 
 LOCK TABLES `t_user` WRITE;
 /*!40000 ALTER TABLE `t_user` DISABLE KEYS */;
-INSERT INTO `t_user` VALUES (1579427325411,_binary '',_binary '',_binary '','$2a$10$BOii1RfaU8oFiywGqBDTA.uRb4Zi1QxtjP7yI8vhuvjIEOIkee1n6','pjh','张三');
+INSERT INTO `t_user` VALUES (1579427325411,_binary '',_binary '',_binary '','$2a$10$BOii1RfaU8oFiywGqBDTA.uRb4Zi1QxtjP7yI8vhuvjIEOIkee1n6','zhangsan','张三');
 /*!40000 ALTER TABLE `t_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
