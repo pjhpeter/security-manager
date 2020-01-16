@@ -20,6 +20,8 @@
 + 为了防止token被劫持，添加了与客户端MAC地址绑定的机制
 + 为了应对同一用户发送了并发请求，由于token刷新造成的部分请求token验证不通过的情况，将旧的token缓存起来，有效期为3秒
 
+> 项目需要依赖[heart-parent](https://gitee.com/pjhpeter/heart-parent.git)及其子项目**heart-base**两个项目
+
 ## 项目如何运行
 
 1. 从gitee上克隆项目
