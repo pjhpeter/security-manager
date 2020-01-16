@@ -25,7 +25,7 @@
 ## 项目如何运行
 
 1. 从gitee上克隆项目
-2. 创建MySQL数据库，并运行项目中resources目录中的**security-manager.sql**
+2. 创建MySQL数据库，并运行项目根目录中的**security-manager.sql**
 3. resources目录下的application.yml配置好数据库链接
 4. 运行org.my.heart.SecurityManagerApplication.java启动项目
 
