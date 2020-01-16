@@ -541,7 +541,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
 }
 ```
 
-> 只要通过了这个过滤器后，请求才能到达controller层
+> 只有通过了这个过滤器后，请求才能到达controller层
 
 ## 将自定义策略配置到Spring Security
 
