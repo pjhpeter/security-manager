@@ -36,6 +36,7 @@
 ### 登录请求
 
 POST请求：127.0.0.1:8080/user/login
+
 data：{"username": "zhangsan", "password": "1234"}
 
 ![输入图片说明](https://images.gitee.com/uploads/images/2020/0116/143902_8926ae62_5449551.png "屏幕截图.png")
@@ -52,6 +53,7 @@ data：{"username": "zhangsan", "password": "1234"}
 
 + 获取用户信息
 GET请求：127.0.0.1:8080/user/info
+
 将登录返回的token放到请求头里面
 
 ![输入图片说明](https://images.gitee.com/uploads/images/2020/0116/154821_9d7eff9b_5449551.png "屏幕截图.png")
@@ -68,7 +70,9 @@ GET请求：127.0.0.1:8080/user/info
 
 + 获取菜单权限
 GET请求：127.0.0.1:8080/role/menu/0
+
 请求的方法跟获取用户信息一样
+
 请求成功会看到下面的效果
 
 ![输入图片说明](https://images.gitee.com/uploads/images/2020/0116/155437_2176b23c_5449551.png "屏幕截图.png")
@@ -392,6 +396,7 @@ public class JWTUserDetailsService implements UserDetailsService {
 ## 自定义密码加密算法
 
 Spring Security会使用定义好的加密算法，将前端传来的密码加密,然后跟数据库中读取到的用户信息中的密码进行对比，所以数据库中存的密码是经过加密后的字符串。
+
 至于用什么加密算法，需要我们先声明和注入到Spring容器中。在**HeartSecurityConfig**中注入加密处理类，这里使用加盐算法：
 
 ```java
@@ -406,6 +411,7 @@ public PasswordEncoder getPasswordEncoder() {
 ## 自定义登录验证成功和失败处理
 
 登录的验证Spring Security底层已帮我们做好，成功和失败的处理也有默认实现，不过我们一般都要根据自己的业务来定义处理逻辑，我们需要定义两个类，实现**AuthenticationSuccessHandler**和**AuthenticationFailureHandler**。
+
 项目结合的是JWT，所以成功是会返回一个JWT规范的token，失败则返回错误信息。这里创建**JWTAuthenticationSuccessHandler**和**JWTAuthentiacionFailureHandler**：
 
 **JWTAuthenticationSuccessHandler**
